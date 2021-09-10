@@ -2,6 +2,7 @@ package com.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -32,6 +33,25 @@ class DuplicateInsertionTest {
 		em = null;
 	}
 
+	@Test
+	void queryTest() {
+		em.getTransaction().begin();
+		Parent parent = new Parent();
+		Child child = new Child();
+		//parent.getChildren().add(child);
+		//child.setParent(parent);
+
+		em.persist(parent);
+		em.getTransaction().commit();
+		em.close();
+
+		em = emf.createEntityManager();
+
+		List l = em.createQuery("select p from Parent p")
+				   .getResultList();
+		System.out.println(l.size());
+	}
+
 	/**
 	 * This is a reasonable workaround for the bug because it works and at the same time we can do the correct
 	 * thing by updating both sides of the relationship.
@@ -60,28 +80,28 @@ class DuplicateInsertionTest {
 			em.persist(child);
 
 			// update both sides of the relationship
-			child.setParent(parent);
-			parent.getChildren().add(child);
+			//child.setParent(parent);
+			//parent.getChildren().add(child);
 
-			assertEquals(1, parent.getChildren().size());
+			//assertEquals(1, parent.getChildren().size());
 		} finally {
 			em.getTransaction().commit();
 		}
 
 		parent = em.find(Parent.class, id);
-		assertEquals(1, parent.getChildren().size());
+		//assertEquals(1, parent.getChildren().size());
 	}
 
 	BiConsumer<Parent, Child> bothSides = (parent, child) -> {
-		child.setParent(parent);
-		parent.getChildren().add(child);
+		//child.setParent(parent);
+		//parent.getChildren().add(child);
 	};
 
-	BiConsumer<Parent, Child> parentSide = (parent, child) ->
-		parent.getChildren().add(child);
+	BiConsumer<Parent, Child> parentSide = (parent, child) -> System.out.println();
+		//parent.getChildren().add(child);
 
-	BiConsumer<Parent, Child> childSide = (parent, child) ->
-		child.setParent(parent);
+	BiConsumer<Parent, Child> childSide = (parent, child) -> System.out.println();
+		//child.setParent(parent);
 
 	/**
 	 * Bidirectional relationship being handled correctly, it works if Child is persisted before
@@ -233,7 +253,7 @@ class DuplicateInsertionTest {
 			if (checkInsideTx) {
 				System.out.println("checking size inside tx");
 				// verify the number of children
-				assertEquals(1, parent.getChildren().size());
+				//assertEquals(1, parent.getChildren().size());
 			}
 		} finally {
 			em.getTransaction().commit();
@@ -241,7 +261,7 @@ class DuplicateInsertionTest {
 
 		System.out.println("checking size outside tx");
 		parent = em.find(Parent.class, id);
-		assertEquals(1, parent.getChildren().size());
+		//assertEquals(1, parent.getChildren().size());
 	}
 
 	@AfterAll

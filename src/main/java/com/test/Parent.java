@@ -10,8 +10,11 @@ public class Parent
 	@GeneratedValue
 	private int id;
 
-	@OneToMany(mappedBy="parent")
-	private List<Child> children = new LinkedList<>();
+	//@OneToMany(mappedBy="parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	//private List<Child> children = new LinkedList<>();
+
+	@OneToOne(mappedBy="padrasto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Child filho;
 
 	public int getId()
 	{
@@ -23,7 +26,7 @@ public class Parent
 		this.id = id;
 	}
 	
-	public List<Child> getChildren()
+	/*public List<Child> getChildren()
 	{
 		return children;
 	}
@@ -31,5 +34,5 @@ public class Parent
 	public void setChildren(List<Child> children)
 	{
 		this.children = children;
-	}
+	}*/
 }

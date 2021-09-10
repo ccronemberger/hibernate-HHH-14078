@@ -9,8 +9,12 @@ public class Child
 	@GeneratedValue
 	private int id;
 
-	@ManyToOne
-	private Parent parent;
+	//@ManyToOne(fetch = FetchType.LAZY)
+	//private Parent parent;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId
+	private Parent padrasto;
 
 	public int getId()
 	{
@@ -22,7 +26,7 @@ public class Child
 		this.id = id;
 	}
 
-	public Parent getParent()
+	/*public Parent getParent()
 	{
 		return parent;
 	}
@@ -30,5 +34,5 @@ public class Child
 	public void setParent(Parent parent)
 	{
 		this.parent = parent;
-	}
+	}*/
 }
